@@ -161,6 +161,15 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--tx);font-
 .sol-f{height:100%;border-radius:4px}
 .sol-h{font-size:11px;color:var(--tx2);width:36px;text-align:right;flex-shrink:0}
 
+/* INSTALL BANNER */
+.inst-bar{display:none;position:fixed;bottom:calc(var(--th) + var(--sb) + 10px);left:12px;right:12px;background:var(--ac2);color:#fff;border-radius:14px;padding:13px 16px;z-index:300;align-items:center;gap:12px;box-shadow:0 4px 20px rgba(0,180,216,.4)}
+.inst-bar.show{display:flex}
+.inst-ico{font-size:26px;flex-shrink:0}
+.inst-txt{flex:1;font-size:13px;line-height:1.4}
+.inst-txt b{display:block;font-size:15px;margin-bottom:2px}
+.inst-btn{background:#fff;color:var(--ac2);border:none;padding:8px 14px;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;flex-shrink:0;white-space:nowrap}
+.inst-x{background:none;border:none;color:rgba(255,255,255,.7);font-size:20px;cursor:pointer;padding:0 4px;flex-shrink:0}
+
 /* CATCH */
 .cbtn{width:100%;padding:14px;background:var(--ac2);color:#fff;border:none;border-radius:12px;font-size:16px;font-weight:700;cursor:pointer;margin-bottom:14px}
 .cbtn:active{opacity:.75}
@@ -379,6 +388,14 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--tx);font-
 
 </div>
 
+<!-- INSTALL BANNER -->
+<div class="inst-bar" id="installBar">
+  <div class="inst-ico">📲</div>
+  <div class="inst-txt"><b>Zainstaluj WędkAI</b>Otwieraj jak aplikację, bez przeglądarki</div>
+  <button class="inst-btn" id="installBtn">Zainstaluj</button>
+  <button class="inst-x" onclick="document.getElementById('installBar').classList.remove('show')">✕</button>
+</div>
+
 <!-- TAB BAR -->
 <div class="tbar">
   <button class="tb-btn active" id="tbtn-map" onclick="showTab('map',this)"><span class="tb-ico">🗺</span><span>Mapa</span></button>
@@ -389,6 +406,27 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--tx);font-
 </div>
 
 <script>
+// ── PWA INSTALL ────────────────────────────────────────
+let deferredPrompt = null;
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  deferredPrompt = e;
+  setTimeout(() => document.getElementById('installBar').classList.add('show'), 2500);
+});
+document.getElementById('installBtn').addEventListener('click', async () => {
+  if (!deferredPrompt) return;
+  deferredPrompt.prompt();
+  const {outcome} = await deferredPrompt.userChoice;
+  deferredPrompt = null;
+  document.getElementById('installBar').classList.remove('show');
+});
+window.addEventListener('appinstalled', () => {
+  document.getElementById('installBar').classList.remove('show');
+});
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/sw.js').catch(()=>{});
+}
+
 // ── MOBILE UX ─────────────────────────────────────────
 function openFilter(){document.getElementById('filterDrawer').classList.add('open')}
 function closeFilter(){document.getElementById('filterDrawer').classList.remove('open')}
