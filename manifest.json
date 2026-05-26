@@ -1,18 +1,21 @@
 {
-  "name": "WędkAI — Predykcja Żerowania",
+  "name": "WędkAI",
   "short_name": "WędkAI",
-  "description": "Aplikacja dla wędkarzy — predykcja miejsc i czasu żerowania ryb na podstawie pogody i fazy księżyca.",
+  "description": "Inteligentny asystent wędkarza",
   "start_url": "/",
   "display": "standalone",
-  "orientation": "portrait",
   "background_color": "#0f1923",
   "theme_color": "#00b4d8",
-  "lang": "pl",
   "icons": [
-    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
-    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
-  ],
-  "categories": ["sports", "lifestyle", "utilities"],
-  "screenshots": [],
-  "related_applications": []
+    {
+      "src": "/ikona-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/ikona-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
 }

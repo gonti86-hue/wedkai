@@ -1,5 +1,5 @@
-const CACHE = 'wedkai-v3';
-const STATIC = ['/', '/index.html', '/manifest.json', '/icon-192.png', '/icon-512.png'];
+const CACHE = 'wedkai-v4';
+const STATIC = ['/', '/indeks.html', '/manifest.json', '/ikona-192.png', '/ikona-512.png'];
 
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(STATIC)).then(() => self.skipWaiting()));
@@ -23,7 +23,7 @@ self.addEventListener('fetch', e => {
       return fetch(e.request).then(res => {
         if (res.ok) caches.open(CACHE).then(c => c.put(e.request, res.clone()));
         return res;
-      }).catch(() => caches.match('/index.html'));
+      }).catch(() => caches.match('/indeks.html'));
     })
   );
 });
