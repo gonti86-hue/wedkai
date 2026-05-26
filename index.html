@@ -41,14 +41,45 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--tx);font-
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
 
 /* CONTROLS */
-.ctrl{position:fixed;top:var(--hh);left:0;right:0;height:var(--ch);background:var(--sf2);border-bottom:1px solid var(--br);display:flex;align-items:center;gap:8px;padding:0 12px;z-index:190;overflow-x:auto;scrollbar-width:none}
-.ctrl::-webkit-scrollbar{display:none}
-.cg{display:flex;flex-direction:column;gap:2px;min-width:0;flex-shrink:0}
-.cl{font-size:10px;color:var(--tx2);white-space:nowrap}
-select,input[type=date]{background:var(--sf);border:1px solid var(--br);color:var(--tx);padding:5px 8px;border-radius:8px;font-size:13px;height:32px;max-width:155px;-webkit-appearance:none;appearance:none}
-input[type=date]{max-width:130px}
-.btn-r{background:var(--ac2);color:#fff;border:none;padding:0 14px;border-radius:8px;height:32px;font-size:13px;font-weight:600;white-space:nowrap;flex-shrink:0;cursor:pointer}
-.btn-r:active{opacity:.75}
+/* COMPACT CTRL BAR */
+.ctrl{position:fixed;top:var(--hh);left:0;right:0;height:var(--ch);background:var(--sf2);border-bottom:1px solid var(--br);display:flex;align-items:center;gap:8px;padding:0 12px;z-index:190}
+.ctrl-chips{flex:1;display:flex;gap:6px;overflow:hidden}
+.chip{background:var(--sf);border:1px solid var(--br);border-radius:20px;padding:6px 12px;font-size:13px;color:var(--tx);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:48%}
+.ctrl-flt{background:var(--ac2);color:#fff;border:none;width:36px;height:36px;border-radius:11px;font-size:19px;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.ctrl-flt:active{opacity:.7}
+/* FILTER DRAWER */
+.fdr{position:fixed;inset:0;z-index:500;pointer-events:none;display:flex;flex-direction:column;justify-content:flex-end}
+.fdr-bg{position:absolute;inset:0;background:rgba(0,0,0,0);transition:background .3s;pointer-events:none}
+.fdr.open .fdr-bg{background:rgba(0,0,0,.55);pointer-events:all}
+.fdr-panel{position:relative;background:var(--sf);border-radius:22px 22px 0 0;transform:translateY(100%);transition:transform .32s cubic-bezier(.32,.72,0,1);padding-bottom:calc(var(--sb) + 8px)}
+.fdr.open .fdr-panel{transform:translateY(0)}
+.fdr-hdl{width:40px;height:4px;background:var(--br);border-radius:2px;margin:14px auto 0}
+.fdr-ttl{font-size:17px;font-weight:800;color:var(--tx);padding:14px 20px 12px;border-bottom:1px solid var(--br)}
+.fdr-row{padding:14px 20px;border-bottom:1px solid var(--br)}
+.fdr-lbl{font-size:11px;color:var(--tx2);text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px}
+.fdr-row select,.fdr-row input[type=date]{width:100%;background:var(--sf2);border:1px solid var(--br);color:var(--tx);padding:13px 14px;border-radius:13px;font-size:16px;-webkit-appearance:none;appearance:none}
+.fdr-apply{margin:14px 20px 0;width:calc(100% - 40px);padding:15px;background:var(--ac2);color:#fff;border:none;border-radius:14px;font-size:16px;font-weight:700;cursor:pointer}
+.fdr-apply:active{opacity:.75}
+/* NODE BOTTOM SHEET */
+.nbs{position:fixed;inset:0;z-index:400;pointer-events:none;display:flex;flex-direction:column;justify-content:flex-end}
+.nbs-bg{position:absolute;inset:0;pointer-events:none}
+.nbs.open .nbs-bg{pointer-events:all}
+.nbs-panel{position:relative;background:var(--sf);border-radius:22px 22px 0 0;transform:translateY(100%);transition:transform .3s cubic-bezier(.32,.72,0,1);padding-bottom:calc(var(--th) + var(--sb) + 8px)}
+.nbs.open .nbs-panel{transform:translateY(0)}
+.nbs-hdl{width:40px;height:4px;background:var(--br);border-radius:2px;margin:14px auto 10px}
+.nbs-name{font-size:19px;font-weight:800;padding:0 20px 6px}
+.nbs-score-row{display:flex;align-items:center;gap:12px;padding:0 20px 14px;border-bottom:1px solid var(--br);margin-bottom:14px}
+.nbs-num{font-size:36px;font-weight:900;color:var(--gr);line-height:1}
+.nbs-bar-w{flex:1}
+.nbs-bar-lbl{font-size:11px;color:var(--tx2);margin-bottom:5px}
+.nbs-bar{height:9px;background:var(--sf2);border-radius:5px;overflow:hidden}
+.nbs-bar-f{height:100%;border-radius:5px;transition:width .5s}
+.nbs-gr{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--br);margin:0 20px 14px;border-radius:14px;overflow:hidden}
+.nbs-cell{background:var(--sf2);padding:13px 14px}
+.nbs-cl{font-size:11px;color:var(--tx2);margin-bottom:3px}
+.nbs-cv{font-size:15px;font-weight:700}
+.nbs-tags{padding:0 20px 6px;display:flex;flex-wrap:wrap;gap:6px}
+.nbs-tg{background:var(--sf2);border:1px solid var(--br);border-radius:20px;font-size:12px;padding:5px 12px;color:var(--tx2)}
 
 /* SCROLL */
 .scroll{position:fixed;top:calc(var(--hh) + var(--ch));left:0;right:0;bottom:calc(var(--th) + var(--sb));overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
@@ -61,7 +92,7 @@ input[type=date]{max-width:130px}
 @keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
 
 /* MAP */
-.map-w{position:relative;width:100%;background:#e8e3d5;overflow:hidden}
+.map-w{position:relative;width:100%;background:#e8e3d5;overflow:hidden;height:44vh;min-height:240px;max-height:420px}
 #lsvg{width:100%;height:100%;display:block}
 .map-info{position:absolute;top:12px;left:12px;background:rgba(255,255,255,.95);border:1px solid #ccc;border-radius:10px;padding:9px 12px;max-width:210px;pointer-events:none;box-shadow:0 2px 6px rgba(0,0,0,.15)}
 .map-info h3{font-size:13px;color:#1a73e8;margin-bottom:3px;font-weight:700}
@@ -73,9 +104,9 @@ input[type=date]{max-width:130px}
 .tip-o{position:absolute;background:rgba(255,255,255,.98);border:1px solid #bbb;border-radius:10px;padding:10px 14px;font-size:12px;color:#222;pointer-events:none;display:none;z-index:50;max-width:200px;line-height:1.5;top:0;left:0;box-shadow:0 3px 10px rgba(0,0,0,.2)}
 
 /* SECTION */
-.sec{padding:16px;border-bottom:1px solid var(--br)}
+.sec{padding:18px 16px;border-bottom:1px solid var(--br)}
 .sec:last-child{border-bottom:none;padding-bottom:32px}
-.sec-t{font-size:12px;text-transform:uppercase;letter-spacing:.8px;color:var(--tx2);margin-bottom:12px;display:flex;align-items:center;gap:6px}
+.sec-t{font-size:12px;text-transform:uppercase;letter-spacing:.8px;color:var(--tx2);margin-bottom:14px;display:flex;align-items:center;gap:6px;font-weight:700}
 
 /* COND GRID */
 .cgrd{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
@@ -147,10 +178,11 @@ input[type=date]{max-width:130px}
 
 /* TAB BAR */
 .tbar{position:fixed;left:0;right:0;bottom:0;height:calc(var(--th) + var(--sb));padding-bottom:var(--sb);background:var(--sf);border-top:1px solid var(--br);display:flex;z-index:200}
-.tb-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer;border:none;background:transparent;color:var(--tx2);font-size:10px;font-weight:600;transition:color .15s}
+.tb-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer;border:none;background:transparent;color:var(--tx2);font-size:10px;font-weight:600;transition:color .15s;position:relative;padding-top:4px}
 .tb-btn:active{opacity:.6}
 .tb-btn.active{color:var(--ac)}
-.tb-ico{font-size:22px;line-height:1}
+.tb-btn.active::before{content:'';position:absolute;top:0;left:25%;right:25%;height:3px;background:var(--ac);border-radius:0 0 3px 3px}
+.tb-ico{font-size:24px;line-height:1}
 .disc{font-size:11px;color:var(--tx2);opacity:.5;text-align:center;padding:16px}
 </style>
 </head>
@@ -177,40 +209,72 @@ input[type=date]{max-width:130px}
   </div>
 </div>
 
-<!-- CONTROLS -->
+<!-- COMPACT CONTROLS -->
 <div class="ctrl">
-  <div class="cg">
-    <div class="cl">Jezioro</div>
-    <select id="lakeSelect" onchange="updateAll()">
-      <option value="maltanskie">Jez. Maltańskie</option>
-      <option value="lednica">Jez. Lednickie</option>
-      <option value="biezdruchowo">Jez. Biezdruchowskie</option>
-      <optgroup label="── Warmia i Mazury ──">
-      <option value="sniardwy">Jez. Śniardwy (największe w PL)</option>
-      <option value="mamry">Jez. Mamry</option>
-      <option value="niegocin">Jez. Niegocin (Giżycko)</option>
-      <option value="mikolajskie">Jez. Mikołajskie</option>
-      <option value="jeziorak">Jez. Jeziorak (najdłuższe w PL)</option>
-      <option value="wulpinskie">Jez. Wulpińskie (Olsztyn)</option>
-      <option value="sarag">Jez. Sarąg (Szczytno)</option>
-      </optgroup>
-    </select>
+  <div class="ctrl-chips">
+    <div class="chip" id="chipLake">🏞 Maltańskie</div>
+    <div class="chip" id="chipSp">🎣 Szczupak</div>
   </div>
-  <div class="cg">
-    <div class="cl">Gatunek</div>
-    <select id="speciesSelect" onchange="updateAll()">
-      <option value="szczupak">🎣 Szczupak</option>
-      <option value="sandacz">🎣 Sandacz</option>
-      <option value="okun">🎣 Okoń</option>
-      <option value="karp">🎣 Karp</option>
-      <option value="leszcz">🎣 Leszcz</option>
-    </select>
+  <button class="ctrl-flt" onclick="openFilter()" aria-label="Filtry">⚙️</button>
+</div>
+
+<!-- FILTER DRAWER -->
+<div class="fdr" id="filterDrawer">
+  <div class="fdr-bg" onclick="closeFilter()"></div>
+  <div class="fdr-panel">
+    <div class="fdr-hdl"></div>
+    <div class="fdr-ttl">⚙️ Filtry</div>
+    <div class="fdr-row">
+      <div class="fdr-lbl">Jezioro</div>
+      <select id="lakeSelect">
+        <option value="maltanskie">Jez. Maltańskie</option>
+        <option value="lednica">Jez. Lednickie</option>
+        <option value="biezdruchowo">Jez. Biezdruchowskie</option>
+        <optgroup label="── Warmia i Mazury ──">
+        <option value="sniardwy">Jez. Śniardwy (największe w PL)</option>
+        <option value="mamry">Jez. Mamry</option>
+        <option value="niegocin">Jez. Niegocin (Giżycko)</option>
+        <option value="mikolajskie">Jez. Mikołajskie</option>
+        <option value="jeziorak">Jez. Jeziorak (najdłuższe w PL)</option>
+        <option value="wulpinskie">Jez. Wulpińskie (Olsztyn)</option>
+        <option value="sarag">Jez. Sarąg (Szczytno)</option>
+        </optgroup>
+      </select>
+    </div>
+    <div class="fdr-row">
+      <div class="fdr-lbl">Gatunek ryby</div>
+      <select id="speciesSelect">
+        <option value="szczupak">🎣 Szczupak</option>
+        <option value="sandacz">🎣 Sandacz</option>
+        <option value="okun">🎣 Okoń</option>
+        <option value="karp">🎣 Karp</option>
+        <option value="leszcz">🎣 Leszcz</option>
+      </select>
+    </div>
+    <div class="fdr-row">
+      <div class="fdr-lbl">Data</div>
+      <input type="date" id="dateInput"/>
+    </div>
+    <button class="fdr-apply" onclick="applyFilter()">✓ Zastosuj</button>
   </div>
-  <div class="cg">
-    <div class="cl">Data</div>
-    <input type="date" id="dateInput" onchange="updateAll()"/>
+</div>
+
+<!-- NODE BOTTOM SHEET -->
+<div class="nbs" id="nodeSheet">
+  <div class="nbs-bg" onclick="closeNodeSheet()"></div>
+  <div class="nbs-panel">
+    <div class="nbs-hdl"></div>
+    <div class="nbs-name" id="nbsName">—</div>
+    <div class="nbs-score-row">
+      <div class="nbs-num" id="nbsScore">—</div>
+      <div class="nbs-bar-w">
+        <div class="nbs-bar-lbl">Aktywność ryb</div>
+        <div class="nbs-bar"><div class="nbs-bar-f" id="nbsBarF"></div></div>
+      </div>
+    </div>
+    <div class="nbs-gr" id="nbsGrid"></div>
+    <div class="nbs-tags" id="nbsTags"></div>
   </div>
-  <button class="btn-r" onclick="updateAll()">↻ Odśwież</button>
 </div>
 
 <!-- SCROLL AREA -->
@@ -325,6 +389,58 @@ input[type=date]{max-width:130px}
 </div>
 
 <script>
+// ── MOBILE UX ─────────────────────────────────────────
+function openFilter(){document.getElementById('filterDrawer').classList.add('open')}
+function closeFilter(){document.getElementById('filterDrawer').classList.remove('open')}
+function applyFilter(){updateAll();closeFilter()}
+
+function updateChips(){
+  const l=document.getElementById('lakeSelect');
+  const s=document.getElementById('speciesSelect');
+  if(!l||!s)return;
+  const ln=l.options[l.selectedIndex]?.text||'';
+  const sn=s.options[s.selectedIndex]?.text||'';
+  const lShort=ln.replace('Jez. ','').replace(' (największe w PL)','').replace(' (najdłuższe w PL)','').replace(' (Giżycko)','').replace(' (Olsztyn)','').replace(' (Szczytno)','');
+  document.getElementById('chipLake').textContent='🏞 '+lShort;
+  document.getElementById('chipSp').textContent=sn.substring(0,18);
+}
+
+function openNodeSheet(n){
+  document.getElementById('nbsName').textContent=n.name;
+  document.getElementById('nbsScore').textContent=n.score;
+  const sc=n.score;
+  const fill=document.getElementById('nbsBarF');
+  fill.style.width=sc+'%';
+  fill.style.background=sc>70?'var(--rd)':sc>50?'var(--gd)':sc>35?'var(--ac)':'var(--br)';
+  document.getElementById('nbsGrid').innerHTML=
+    '<div class="nbs-cell"><div class="nbs-cl">Głębokość</div><div class="nbs-cv">'+n.depth+' m</div></div>'+
+    '<div class="nbs-cell"><div class="nbs-cl">Dno</div><div class="nbs-cv">'+n.sub+'</div></div>'+
+    '<div class="nbs-cell"><div class="nbs-cl">Roślinność</div><div class="nbs-cv">'+(n.veg||'brak')+'</div></div>'+
+    '<div class="nbs-cell"><div class="nbs-cl">Dopływ</div><div class="nbs-cv">'+(n.inlet?'💧 Tak':'Nie')+'</div></div>';
+  const tags=(n.factors||[]).slice(0,5).map(f=>'<div class="nbs-tg">'+f+'</div>').join('');
+  document.getElementById('nbsTags').innerHTML=tags;
+  document.getElementById('nodeSheet').classList.add('open');
+  if(navigator.vibrate)navigator.vibrate(18);
+}
+function closeNodeSheet(){document.getElementById('nodeSheet').classList.remove('open')}
+
+// Swipe między zakładkami
+(function(){
+  const tabs=['map','weather','time','spots','log'];
+  let tx=0,ty=0;
+  const el=document.getElementById('scrollArea');
+  el.addEventListener('touchstart',e=>{tx=e.touches[0].clientX;ty=e.touches[0].clientY;},{passive:true});
+  el.addEventListener('touchend',e=>{
+    const dx=e.changedTouches[0].clientX-tx;
+    const dy=e.changedTouches[0].clientY-ty;
+    if(Math.abs(dx)>60&&Math.abs(dx)>Math.abs(dy)*1.5){
+      const cur=tabs.findIndex(t=>document.getElementById('tab-'+t).classList.contains('active'));
+      const next=dx<0?Math.min(cur+1,tabs.length-1):Math.max(cur-1,0);
+      if(next!==cur){const b=document.getElementById('tbtn-'+tabs[next]);showTab(tabs[next],b);}
+    }
+  },{passive:true});
+})();
+
 // ── LAKE DATA ──────────────────────────────────────────
 const LAKES = {
   maltanskie:{name:'Jez. Maltańskie',desc:'Zbiornik miejski, 64 ha, głęb. max 7 m.',lat:52.3957,lon:17.0439,
@@ -742,19 +858,10 @@ function renderMap() {
 }
 
 function tapNode(n) {
-  document.getElementById('mapDesc').textContent='📍 '+n.name+' · '+n.depth+'m · '+n.sub+'. Wynik: '+n.score+'/100. '+(n.factors||[]).join('; ')+'.';
   const ring=document.getElementById('hlRing');
   ring.setAttribute('cx',n.x);ring.setAttribute('cy',n.y);ring.setAttribute('opacity','1');
-  const svg=document.getElementById('lsvg');
-  const pt=svg.createSVGPoint(); pt.x=n.x; pt.y=n.y;
-  const sc=pt.matrixTransform(svg.getScreenCTM());
-  const pr=document.getElementById('mapWrap').getBoundingClientRect();
-  const tt=document.getElementById('tip');
-  tt.innerHTML='<b>'+n.name+'</b><br>Głęb.: '+n.depth+'m · Dno: '+n.sub+'<br>Rośl.: '+n.veg+'<br>Wynik: <b style="color:#2ec4b6">'+n.score+'/100</b><br><small>'+(n.factors||[]).join(' · ')+'</small>';
-  tt.style.left=Math.min(sc.x-pr.left+16,pr.width-210)+'px';
-  tt.style.top=Math.max(4,sc.y-pr.top-95)+'px';
-  tt.style.display='block';
-  clearTimeout(tipTO); tipTO=setTimeout(()=>{tt.style.display='none';},3500);
+  setTimeout(()=>ring.setAttribute('opacity','0'),1800);
+  openNodeSheet(n);
 }
 
 // ── CONDITIONS ─────────────────────────────────────────
