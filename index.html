@@ -61,16 +61,16 @@ input[type=date]{max-width:130px}
 @keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
 
 /* MAP */
-.map-w{position:relative;width:100%;background:#0a1520;overflow:hidden}
+.map-w{position:relative;width:100%;background:#e8e3d5;overflow:hidden}
 #lsvg{width:100%;height:100%;display:block}
-.map-info{position:absolute;top:12px;left:12px;background:rgba(15,25,35,.93);border:1px solid var(--br);border-radius:10px;padding:9px 12px;max-width:210px;pointer-events:none}
-.map-info h3{font-size:13px;color:var(--ac);margin-bottom:3px}
-.map-info p{font-size:11px;color:var(--tx2);line-height:1.45}
-.map-leg{position:absolute;bottom:12px;left:12px;background:rgba(15,25,35,.88);border:1px solid var(--br);border-radius:10px;padding:8px 12px;pointer-events:none}
-.map-leg h4{font-size:10px;color:var(--tx2);margin-bottom:5px;text-transform:uppercase;letter-spacing:.5px}
+.map-info{position:absolute;top:12px;left:12px;background:rgba(255,255,255,.95);border:1px solid #ccc;border-radius:10px;padding:9px 12px;max-width:210px;pointer-events:none;box-shadow:0 2px 6px rgba(0,0,0,.15)}
+.map-info h3{font-size:13px;color:#1a73e8;margin-bottom:3px;font-weight:700}
+.map-info p{font-size:11px;color:#555;line-height:1.45}
+.map-leg{position:absolute;bottom:12px;left:12px;background:rgba(255,255,255,.95);border:1px solid #ccc;border-radius:10px;padding:8px 12px;pointer-events:none;box-shadow:0 2px 6px rgba(0,0,0,.15)}
+.map-leg h4{font-size:10px;color:#444;margin-bottom:5px;text-transform:uppercase;letter-spacing:.5px}
 .leg-bar{width:120px;height:10px;border-radius:5px;background:linear-gradient(to right,#1a3a5c,#0ea5e9,#f4a261,#ef4444);margin-bottom:3px}
-.leg-lbl{display:flex;justify-content:space-between;font-size:9px;color:var(--tx2)}
-.tip-o{position:absolute;background:rgba(10,20,30,.97);border:1px solid var(--ac);border-radius:10px;padding:10px 14px;font-size:12px;color:var(--tx);pointer-events:none;display:none;z-index:50;max-width:200px;line-height:1.5;top:0;left:0}
+.leg-lbl{display:flex;justify-content:space-between;font-size:9px;color:#666}
+.tip-o{position:absolute;background:rgba(255,255,255,.98);border:1px solid #bbb;border-radius:10px;padding:10px 14px;font-size:12px;color:#222;pointer-events:none;display:none;z-index:50;max-width:200px;line-height:1.5;top:0;left:0;box-shadow:0 3px 10px rgba(0,0,0,.2)}
 
 /* SECTION */
 .sec{padding:16px;border-bottom:1px solid var(--br)}
@@ -220,13 +220,21 @@ input[type=date]{max-width:130px}
   <div class="tab-p active" id="tab-map">
     <div class="map-w" id="mapWrap">
       <svg id="lsvg" viewBox="0 0 700 500" xmlns="http://www.w3.org/2000/svg">
-        <defs><filter id="blur"><feGaussianBlur stdDeviation="18"/></filter></defs>
-        <rect width="700" height="500" fill="#0a1f35"/>
-        <path id="lakePath" d="" fill="#0d3a5c" stroke="#1e5f8c" stroke-width="2"/>
-        <g id="heatG" filter="url(#blur)"></g>
+        <defs>
+          <filter id="blur"><feGaussianBlur stdDeviation="16"/></filter>
+          <filter id="shadow"><feDropShadow dx="0" dy="1" stdDeviation="2" flood-color="#00000033"/></filter>
+          <clipPath id="lakeClip"><path id="lakeClipPath" d=""/></clipPath>
+        </defs>
+        <rect width="700" height="500" fill="#e8e3d5"/>
+        <g id="landG"></g>
+        <path id="lakePath" d="" fill="#aad3df" stroke="#72b3c8" stroke-width="1.5"/>
+        <path id="lakeDepth" d="" fill="#7fbdd4" opacity="0" clip-path="url(#lakeClip)"/>
+        <g id="heatG" filter="url(#blur)" clip-path="url(#lakeClip)"></g>
+        <g id="depthLines" clip-path="url(#lakeClip)"></g>
         <g id="featG"></g>
         <g id="nodesG"></g>
-        <circle id="hlRing" cx="-200" cy="-200" r="26" fill="none" stroke="#f4a261" stroke-width="3" stroke-dasharray="6,3" opacity="0"/>
+        <g id="compassG"></g>
+        <circle id="hlRing" cx="-200" cy="-200" r="26" fill="none" stroke="#d44" stroke-width="3" stroke-dasharray="6,3" opacity="0"/>
       </svg>
       <div class="map-info">
         <h3 id="mapName">—</h3>
@@ -615,45 +623,122 @@ function updateMapH() {
 
 function renderMap() {
   const l=curLake;
+  const ns='http://www.w3.org/2000/svg';
   document.getElementById('lakePath').setAttribute('d',l.path);
+  document.getElementById('lakeClipPath').setAttribute('d',l.path);
+  document.getElementById('lakeDepth').setAttribute('d',l.path);
   document.getElementById('mapName').textContent=l.name;
   document.getElementById('mapDesc').textContent=l.desc;
+
+  // Land features (Google Maps style green patches)
+  const landG=document.getElementById('landG'); landG.innerHTML='';
+  const seed=l.name.split('').reduce((a,c)=>a+c.charCodeAt(0),0);
+  const patches=[
+    [45,45,95,48,'#c8dfa1'],[615,38,88,42,'#b8d492'],[580,435,78,38,'#c8dfa1'],
+    [68,428,82,40,'#b8d492'],[638,240,52,62,'#c8dfa1'],[22,210,48,58,'#b8d492'],
+    [340,12,110,22,'#c8dfa1'],[310,475,105,20,'#b8d492'],[130,58,60,30,'#c8dfa1'],
+    [560,58,55,28,'#b8d492'],[660,380,40,55,'#c8dfa1'],[14,340,38,50,'#b8d492']
+  ];
+  patches.forEach(([cx,cy,rx,ry,fill])=>{
+    const e=document.createElementNS(ns,'ellipse');
+    e.setAttribute('cx',cx);e.setAttribute('cy',cy);
+    e.setAttribute('rx',rx);e.setAttribute('ry',ry);
+    e.setAttribute('fill',fill);e.setAttribute('opacity','0.85');
+    landG.appendChild(e);
+  });
+  // Tree dots on green patches
+  [[45,35],[615,28],[580,430],[68,420],[130,52],[560,52]].forEach(([bx,by])=>{
+    for(let i=0;i<5;i++){
+      const t=document.createElementNS(ns,'circle');
+      const ox=((seed*17+i*31)%60)-30, oy=((seed*13+i*23)%40)-20;
+      t.setAttribute('cx',bx+ox);t.setAttribute('cy',by+oy);
+      t.setAttribute('r','4');t.setAttribute('fill','#8fbd5a');t.setAttribute('opacity','0.7');
+      landG.appendChild(t);
+    }
+  });
+
+  // Heatmap (clipped to lake)
   const hg=document.getElementById('heatG'); hg.innerHTML='';
   scoredNodes.forEach(n=>{
-    const c=document.createElementNS('http://www.w3.org/2000/svg','circle');
+    const c=document.createElementNS(ns,'circle');
     c.setAttribute('cx',n.x);c.setAttribute('cy',n.y);
-    c.setAttribute('r',28+n.score*.65);
-    c.setAttribute('fill',n.score>70?'#ef4444':n.score>50?'#f4a261':n.score>35?'#0ea5e9':'#1a3a5c');
-    c.setAttribute('opacity','0.6'); hg.appendChild(c);
+    c.setAttribute('r',32+n.score*.7);
+    c.setAttribute('fill',n.score>70?'#c0392b':n.score>50?'#e07820':n.score>35?'#1a7fc4':'#5a9fc8');
+    c.setAttribute('opacity','0.55'); hg.appendChild(c);
   });
+
+  // Depth contour lines inside lake
+  const dl=document.getElementById('depthLines'); dl.innerHTML='';
+  const maxD=Math.max(...l.nodes.map(n=>n.depth));
+  if(maxD>8){
+    const cx=l.nodes.reduce((s,n)=>s+n.x,0)/l.nodes.length;
+    const cy=l.nodes.reduce((s,n)=>s+n.y,0)/l.nodes.length;
+    [0.55,0.35,0.18].forEach((sc,i)=>{
+      const e=document.createElementNS(ns,'ellipse');
+      const w=180*sc, h=140*sc;
+      e.setAttribute('cx',cx);e.setAttribute('cy',cy);
+      e.setAttribute('rx',w);e.setAttribute('ry',h);
+      e.setAttribute('fill','none');
+      e.setAttribute('stroke','#72b3c8');e.setAttribute('stroke-width','0.8');
+      e.setAttribute('opacity','0.5');
+      dl.appendChild(e);
+    });
+  }
+
+  // Nodes
   const ng=document.getElementById('nodesG'); ng.innerHTML='';
   scoredNodes.forEach(n=>{
-    const g=document.createElementNS('http://www.w3.org/2000/svg','g');
+    const g=document.createElementNS(ns,'g');
     g.style.cursor='pointer';
-    const hit=document.createElementNS('http://www.w3.org/2000/svg','circle');
+    const hit=document.createElementNS(ns,'circle');
     hit.setAttribute('cx',n.x);hit.setAttribute('cy',n.y);hit.setAttribute('r','22');hit.setAttribute('fill','transparent');
-    const ci=document.createElementNS('http://www.w3.org/2000/svg','circle');
+    const shadow=document.createElementNS(ns,'circle');
+    shadow.setAttribute('cx',n.x+1);shadow.setAttribute('cy',n.y+2);shadow.setAttribute('r','13');
+    shadow.setAttribute('fill','rgba(0,0,0,0.25)');
+    const ci=document.createElementNS(ns,'circle');
     ci.setAttribute('cx',n.x);ci.setAttribute('cy',n.y);ci.setAttribute('r','13');
-    ci.setAttribute('fill',n.score>70?'#ef4444':n.score>50?'#f4a261':'#0ea5e9');
-    ci.setAttribute('opacity','0.93');ci.setAttribute('stroke','#fff');ci.setAttribute('stroke-width','2');
-    const tx=document.createElementNS('http://www.w3.org/2000/svg','text');
-    tx.setAttribute('x',n.x);tx.setAttribute('y',n.y+5);tx.setAttribute('text-anchor','middle');
+    ci.setAttribute('fill',n.score>70?'#e53935':n.score>50?'#f57c00':'#1976d2');
+    ci.setAttribute('opacity','0.95');ci.setAttribute('stroke','#fff');ci.setAttribute('stroke-width','2.5');
+    const tx=document.createElementNS(ns,'text');
+    tx.setAttribute('x',n.x);tx.setAttribute('y',n.y+4);tx.setAttribute('text-anchor','middle');
     tx.setAttribute('font-size','10');tx.setAttribute('fill','#fff');tx.setAttribute('font-weight','bold');
     tx.textContent=n.score;
-    const lb=document.createElementNS('http://www.w3.org/2000/svg','text');
-    lb.setAttribute('x',n.x);lb.setAttribute('y',n.y-18);lb.setAttribute('text-anchor','middle');
-    lb.setAttribute('font-size','10');lb.setAttribute('fill','#cde');lb.textContent=n.name.split(' ')[0];
-    g.appendChild(hit);g.appendChild(ci);g.appendChild(tx);g.appendChild(lb);
+    const lb=document.createElementNS(ns,'text');
+    lb.setAttribute('x',n.x);lb.setAttribute('y',n.y-17);lb.setAttribute('text-anchor','middle');
+    lb.setAttribute('font-size','10');lb.setAttribute('fill','#222');lb.setAttribute('font-weight','600');
+    lb.setAttribute('stroke','#fff');lb.setAttribute('stroke-width','3');lb.setAttribute('paint-order','stroke');
+    lb.textContent=n.name.split(' ')[0];
+    g.appendChild(hit);g.appendChild(shadow);g.appendChild(ci);g.appendChild(tx);g.appendChild(lb);
     g.addEventListener('click',()=>tapNode(n));
     g.addEventListener('touchstart',e=>{e.preventDefault();tapNode(n);},{passive:false});
     ng.appendChild(g);
   });
+
+  // Inlet markers
   const fg=document.getElementById('featG'); fg.innerHTML='';
   l.nodes.filter(n=>n.inlet).forEach(n=>{
-    const t=document.createElementNS('http://www.w3.org/2000/svg','text');
-    t.setAttribute('x',n.x+14);t.setAttribute('y',n.y+20);t.setAttribute('font-size','16');t.textContent='💧';
+    const t=document.createElementNS(ns,'text');
+    t.setAttribute('x',n.x+14);t.setAttribute('y',n.y+20);t.setAttribute('font-size','14');t.textContent='💧';
     fg.appendChild(t);
   });
+
+  // Compass rose (Google Maps style N marker)
+  const cg=document.getElementById('compassG'); cg.innerHTML='';
+  const cpx=660,cpy=52;
+  const bg=document.createElementNS(ns,'circle');
+  bg.setAttribute('cx',cpx);bg.setAttribute('cy',cpy);bg.setAttribute('r','20');
+  bg.setAttribute('fill','rgba(255,255,255,0.92)');bg.setAttribute('stroke','#bbb');bg.setAttribute('stroke-width','1');
+  const arr=document.createElementNS(ns,'polygon');
+  arr.setAttribute('points',`${cpx},${cpy-14} ${cpx-6},${cpy+6} ${cpx},${cpy+2} ${cpx+6},${cpy+6}`);
+  arr.setAttribute('fill','#e53935');
+  const arb=document.createElementNS(ns,'polygon');
+  arb.setAttribute('points',`${cpx},${cpy+14} ${cpx-6},${cpy-6} ${cpx},${cpy-2} ${cpx+6},${cpy-6}`);
+  arb.setAttribute('fill','#bbb');
+  const nt=document.createElementNS(ns,'text');
+  nt.setAttribute('x',cpx);nt.setAttribute('y',cpy-20);nt.setAttribute('text-anchor','middle');
+  nt.setAttribute('font-size','9');nt.setAttribute('fill','#333');nt.setAttribute('font-weight','700');
+  nt.textContent='N';
+  cg.appendChild(bg);cg.appendChild(arb);cg.appendChild(arr);cg.appendChild(nt);
 }
 
 function tapNode(n) {
