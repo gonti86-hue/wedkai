@@ -74,7 +74,7 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--tx);font-
 .nbs-bar-lbl{font-size:11px;color:var(--tx2);margin-bottom:5px}
 .nbs-bar{height:9px;background:var(--sf2);border-radius:5px;overflow:hidden}
 .nbs-bar-f{height:100%;border-radius:5px;transition:width .5s}
-.nbs-gr{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--br);margin:0 20px 14px;border-radius:14px;overflow:hidden}
+.nbs-gr{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--br);margin:0 20px 14px;border-radius:14px;overflow:hidden;border:1px solid var(--br)}
 .nbs-cell{background:var(--sf2);padding:13px 14px}
 .nbs-cl{font-size:11px;color:var(--tx2);margin-bottom:3px}
 .nbs-cv{font-size:15px;font-weight:700}
@@ -193,6 +193,34 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--tx);font-
 .tb-btn.active::before{content:'';position:absolute;top:0;left:25%;right:25%;height:3px;background:var(--ac);border-radius:0 0 3px 3px}
 .tb-ico{font-size:24px;line-height:1}
 .disc{font-size:11px;color:var(--tx2);opacity:.5;text-align:center;padding:16px}
+
+/* LAKE CARD */
+.lk-stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:14px}
+.lk-stat{background:var(--sf2);border-radius:10px;padding:10px}
+.lk-stat-l{font-size:10px;color:var(--tx2);margin-bottom:2px}
+.lk-stat-v{font-size:14px;font-weight:700;color:var(--tx)}
+.lk-sub{font-size:11px;text-transform:uppercase;letter-spacing:.7px;color:var(--tx2);margin:14px 0 8px;font-weight:700}
+.lk-fish-row{display:flex;align-items:center;gap:10px;background:var(--sf2);border-radius:10px;padding:11px 13px;margin-bottom:6px}
+.lk-fish-ico{font-size:22px;width:28px;text-align:center;flex-shrink:0}
+.lk-fish-inf{flex:1;min-width:0}
+.lk-fish-nm{font-size:14px;font-weight:700;margin-bottom:2px}
+.lk-fish-det{font-size:11px;color:var(--tx2);line-height:1.45}
+.lk-fish-stars{font-size:12px;flex-shrink:0;color:var(--gd)}
+.lk-season-grid{display:flex;flex-direction:column;gap:6px;margin-bottom:4px}
+.lk-season{background:var(--sf2);border-radius:0 10px 10px 0;padding:11px 12px;border-left:3px solid var(--ac)}
+.lk-season-nm{font-size:11px;font-weight:700;color:var(--ac);margin-bottom:4px;text-transform:uppercase;letter-spacing:.4px}
+.lk-season-tx{font-size:12px;color:var(--tx2);line-height:1.45}
+.lk-permit-box{background:var(--sf2);border-radius:10px;padding:13px 14px;margin-bottom:8px}
+.lk-permit-row{display:flex;justify-content:space-between;align-items:flex-start;padding:6px 0;border-bottom:1px solid var(--br);gap:8px}
+.lk-permit-row:last-child{border-bottom:none;padding-bottom:0}
+.lk-permit-lbl{color:var(--tx2);font-size:12px;flex-shrink:0}
+.lk-permit-val{font-weight:600;font-size:13px;text-align:right}
+.lk-rule{display:flex;align-items:flex-start;gap:9px;background:var(--sf2);border-left:3px solid var(--ac2);border-radius:0 9px 9px 0;padding:9px 12px;margin-bottom:5px;font-size:13px;color:var(--tx2);line-height:1.45}
+.lk-rule-ico{flex-shrink:0;font-size:15px}
+.lk-tip-row{display:flex;align-items:flex-start;gap:10px;background:var(--sf2);border-radius:10px;padding:12px 13px;margin-bottom:6px}
+.lk-tip-ico{font-size:20px;flex-shrink:0}
+.lk-tip-tx{font-size:13px;color:var(--tx2);line-height:1.5}
+.lk-tip-tx b{color:var(--ac);font-size:13px;display:block;margin-bottom:3px}
 </style>
 </head>
 <body>
@@ -201,7 +229,7 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--tx);font-
 <div id="splash">
   <div class="splash-logo">🎣</div>
   <div class="splash-name">Wędkai<span>AI</span></div>
-  <div class="splash-sub">Predykcja żerowania ryb • Region Wielkopolska</div>
+  <div class="splash-sub">Predykcja żerowania ryb • Warmia i Mazury</div>
   <div class="splash-loader"><div class="splash-bar"></div></div>
   <div class="splash-status" id="splashStatus">Pobieranie danych pogodowych…</div>
 </div>
@@ -320,6 +348,22 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--tx);font-
       </div>
       <div class="tip-o" id="tip"></div>
     </div>
+    <!-- KARTA JEZIORA -->
+    <div id="lakeCard" style="display:none">
+      <div class="sec">
+        <div class="sec-t" id="lkCardTitle">📋 Karta jeziora</div>
+        <div class="lk-stat-grid" id="lkStats"></div>
+        <div class="lk-sub">🐟 Ichtiofauna</div>
+        <div id="lkFish"></div>
+        <div class="lk-sub">📅 Sezonowość wędkarska</div>
+        <div class="lk-season-grid" id="lkSeasons"></div>
+        <div class="lk-sub">📜 Zezwolenia &amp; Regulamin</div>
+        <div id="lkPermit"></div>
+        <div id="lkRules"></div>
+        <div class="lk-sub">💡 Porady pro</div>
+        <div id="lkTips"></div>
+      </div>
+    </div>
   </div>
 
   <!-- TAB: POGODA -->
@@ -423,9 +467,6 @@ document.getElementById('installBtn').addEventListener('click', async () => {
 window.addEventListener('appinstalled', () => {
   document.getElementById('installBar').classList.remove('show');
 });
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/sw.js').catch(()=>{});
-}
 
 // ── MOBILE UX ─────────────────────────────────────────
 function openFilter(){document.getElementById('filterDrawer').classList.add('open')}
@@ -454,7 +495,8 @@ function openNodeSheet(n){
     '<div class="nbs-cell"><div class="nbs-cl">Głębokość</div><div class="nbs-cv">'+n.depth+' m</div></div>'+
     '<div class="nbs-cell"><div class="nbs-cl">Dno</div><div class="nbs-cv">'+n.sub+'</div></div>'+
     '<div class="nbs-cell"><div class="nbs-cl">Roślinność</div><div class="nbs-cv">'+(n.veg||'brak')+'</div></div>'+
-    '<div class="nbs-cell"><div class="nbs-cl">Dopływ</div><div class="nbs-cv">'+(n.inlet?'💧 Tak':'Nie')+'</div></div>';
+    '<div class="nbs-cell"><div class="nbs-cl">Dopływ</div><div class="nbs-cv">'+(n.inlet?'💧 Tak':'Nie')+'</div></div>'+
+    (n.species?'<div class="nbs-cell" style="grid-column:1/-1"><div class="nbs-cl">Docelowe gatunki</div><div class="nbs-cv" style="font-size:14px">'+n.species+'</div></div>':'')+(n.method?'<div class="nbs-cell" style="grid-column:1/-1"><div class="nbs-cl">Zalecana metoda</div><div class="nbs-cv" style="font-size:13px;font-weight:600;color:var(--ac)">'+n.method+'</div></div>':'');
   const tags=(n.factors||[]).slice(0,5).map(f=>'<div class="nbs-tg">'+f+'</div>').join('');
   document.getElementById('nbsTags').innerHTML=tags;
   document.getElementById('nodeSheet').classList.add('open');
@@ -577,29 +619,108 @@ const LAKES = {
       {id:'n7',x:275,y:248,depth:10.0,sub:'muł',veg:'brak',name:'Rynna Główna',inlet:false},
       {id:'n8',x:298,y:188,depth:4.0,sub:'piasek',veg:'brak',name:'Wyspa Wielka',inlet:false}
     ]},
-  wulpinskie:{name:'Jez. Wulpińskie',desc:'Jezioro rynnowe k. Olsztyna, 952 ha, głęb. max 28.6 m. Doskonałe łowisko sandacza, szczupaka i okonia.',lat:53.7000,lon:20.4700,
+  wulpinskie:{name:'Jez. Wulpińskie',desc:'Jezioro rynnowe 12 km na południe od Olsztyna, 952 ha, głęb. max 28.6 m. Jedno z najlepszych łowisk sandacza w Warmii. Doskonałe warunki dla szczupaka i okonia.',
+    area:952,maxDepth:28.6,avgDepth:7.5,length:9.4,width:1.4,type:'Rynnowe polodowcowe',visibility:'Dobra (1.5–3 m)',
+    lat:53.7000,lon:20.4700,
     path:'M148,72 Q222,35 325,42 Q428,48 512,102 Q558,145 555,225 Q548,305 508,372 Q458,432 368,455 Q272,468 198,432 Q135,395 115,312 Q98,235 108,165 Q120,108 148,72Z',
+    fish:[
+      {name:'Sandacz',icon:'🎯',size:'do 95 cm / 10 kg',season:'IV–V, IX–XI',method:'Jig 15–40 g, główki 3/0–5/0, dno rynny',rating:5},
+      {name:'Szczupak',icon:'⭐',size:'do 115 cm / 15 kg',season:'III–IV, X–XI',method:'Wobler, jig 10–20 g, żywa ryba',rating:5},
+      {name:'Okoń',icon:'🟢',size:'do 45 cm / 1.2 kg',season:'cały rok',method:'Mały jig, dropshot, spinner 0–8 m',rating:4},
+      {name:'Leszcz',icon:'🟡',size:'do 70 cm / 5 kg',season:'V–VIII',method:'Grunto, pellet, maggot w zatokach',rating:4},
+      {name:'Karp',icon:'🟤',size:'do 90 cm / 12 kg',season:'V–IX',method:'Grunto na pellet/kukurydzę, zanęta',rating:3},
+      {name:'Węgorz',icon:'🌙',size:'do 80 cm / 2 kg',season:'V–IX (nocne)',method:'Dżdżownica, grunto nocne przy dnie',rating:3},
+      {name:'Lin',icon:'🟠',size:'do 55 cm / 3 kg',season:'VI–VIII',method:'Grunto w roślinności zatoki zachodniej',rating:3},
+      {name:'Płoć',icon:'⚪',size:'do 35 cm / 0.7 kg',season:'cały rok',method:'Spławik, grunto, maggot',rating:3}
+    ],
+    seasons:{
+      spring:'Marzec–maj: szczyt szczupaka (III–IV). Po tarle sandacz aktywny w płytszych strefach (maj). Temp. wody 8–15°C – idealne dla drapieżników. Wobler i jig w strefie 0–5 m.',
+      summer:'Czerwiec–sierpień: sandacz schodzi głęboko (8–20 m) i żeruje nocą. Leszcz i karp w zachodniej zatoce Wulpiny. Węgorz aktywny po zmroku. Grunto z zanętą.',
+      autumn:'Wrzesień–listopad: złoty sezon – sandacz i szczupak intensywnie żerują przed zimą. Październik–listopad to czas rekordowych połowów. Jig, wobler, spinning.',
+      winter:'Grudzień–luty: podlodowe łowienie okonia i płoci. Dostęp od strony Wulpiny i Tomaszkowo. Styczeń–luty: gruba warstwa lodu, mormyszka i przynęty naturalne.'
+    },
+    permit:{
+      authority:'PZW Okręg Olsztyn',
+      kolo:'Koło PZW nr 1 Olsztyn',
+      price:'~150–220 zł/rok (karta + zezwolenie okręgowe)',
+      contact:'Biuro PZW Olsztyn, ul. Mazurska 12, tel. 89 527 55 66',
+      rules:[
+        {icon:'🐟',text:'Min. wymiar sandacza: 45 cm; szczupaka: 50 cm; leszcza: 35 cm'},
+        {icon:'📅',text:'Ochrona szczupaka: 1.01–31.03; sandacza: 1.01–31.05 (połów limitowany)'},
+        {icon:'🚤',text:'Łodzie z silnikami spalinowymi: wymagane zezwolenie motorowodne'},
+        {icon:'🌙',text:'Nocne wędkarstwo dozwolone w wyznaczonych miejscach'},
+        {icon:'📍',text:'Główne punkty dostępu: Wulpiny, Tomaszkowo, Ługwałd'}
+      ]
+    },
+    tips:[
+      {icon:'🎯',title:'Sandacz po rynnie',text:'Rynna wzdłuż osi jeziora (12–28 m) to autostrada sandacza. Jig 20–35 g z twisterem białym lub chartreuse – technika: skoki po dnie z 2–3 s pauzami.'},
+      {icon:'🌅',title:'Okna żerowania',text:'Sandacz aktywny głównie o świcie (4:30–7:30) i zmierzchu (19:30–22:30). Poza tymi porami schodzi na dno rynny i słabo reaguje na przynęty.'},
+      {icon:'🏖',title:'Szczupak przy zachodnich trzcinach',text:'Zachodnia zatoka Wulpiny (0.5–2 m głębokości) to rewir szczupaka wiosną i jesienią. Wobler pływający 7–12 cm lub gumowa żabka w roślinności.'},
+      {icon:'🌊',title:'Głębia Tomaszkowo',text:'Najgłębsze partie (25–28 m) przy wschodnim brzegu k. Tomaszkowo. Zimą pod lodem: hotspot sandacza na mormyszkę z paskiem ryby.'},
+      {icon:'🏕',title:'Baza przy Ługwałdzie',text:'Od strony Ługwałdu działa pole namiotowe i wypożyczalnia łódek. Idealna baza na wielodniową wyprawę – nocny węgorz i poranny sandacz z łodzi.'}
+    ],
     nodes:[
-      {id:'n1',x:202,y:108,depth:3.5,sub:'piasek',veg:'trzcina',name:'Zatoka Wulpiny',inlet:true},
-      {id:'n2',x:370,y:68,depth:10.0,sub:'żwir',veg:'brak',name:'Krawędź Północna',inlet:false},
-      {id:'n3',x:515,y:168,depth:22.0,sub:'muł',veg:'brak',name:'Głębia Wschodnia',inlet:false},
-      {id:'n4',x:522,y:312,depth:28.0,sub:'muł',veg:'brak',name:'Głębia Maksymalna',inlet:false},
-      {id:'n5',x:380,y:422,depth:5.0,sub:'piasek',veg:'nenufary',name:'Płycizna Południowa',inlet:false},
-      {id:'n6',x:175,y:372,depth:8.0,sub:'kamienie',veg:'brak',name:'Stok Zachodni',inlet:false},
-      {id:'n7',x:348,y:258,depth:15.0,sub:'muł',veg:'brak',name:'Rynna Centralna',inlet:false},
-      {id:'n8',x:242,y:202,depth:2.5,sub:'piasek',veg:'trzcina',name:'Ujście Łyny',inlet:true}
+      {id:'n1',x:155,y:132,depth:3.0,sub:'piasek',veg:'trzcina',name:'Zatoka Wulpiny',inlet:true,species:'Szczupak, Lin',method:'Wobler, żabka, grunto'},
+      {id:'n2',x:325,y:72,depth:8.0,sub:'żwir',veg:'brak',name:'Krawędź Północna',inlet:false,species:'Okoń, Sandacz',method:'Jig 10–20 g, dropshot'},
+      {id:'n3',x:502,y:155,depth:20.0,sub:'muł',veg:'brak',name:'Głębia Wschodnia – Rynna',inlet:false,species:'Sandacz',method:'Jig 20–35 g, dno rynny'},
+      {id:'n4',x:500,y:288,depth:28.0,sub:'muł',veg:'brak',name:'Głębia Max – Tomaszkowo',inlet:false,species:'Sandacz, Węgorz',method:'Jig głęboki, grunto nocne'},
+      {id:'n5',x:365,y:425,depth:4.5,sub:'piasek',veg:'nenufary',name:'Płycizna Południowa',inlet:false,species:'Leszcz, Karp, Lin',method:'Grunto, pellet, spławik'},
+      {id:'n6',x:165,y:355,depth:7.5,sub:'kamienie',veg:'brak',name:'Zachodni Stok – Kamienie',inlet:false,species:'Okoń, Szczupak',method:'Jig, wobler przy skalnym stoku'},
+      {id:'n7',x:330,y:250,depth:14.0,sub:'muł',veg:'brak',name:'Centrum – Oś Rynny',inlet:false,species:'Sandacz, Szczupak',method:'Jig 15–30 g, trolling wobbler'},
+      {id:'n8',x:195,y:215,depth:2.5,sub:'piasek',veg:'trzcina',name:'Ujście Łyny – Trzcinowisko',inlet:true,species:'Płoć, Okoń, Lin',method:'Spławik, grunto, lekki jig'},
+      {id:'n9',x:415,y:190,depth:11.0,sub:'żwir',veg:'brak',name:'Podwodna Ławica Centralna',inlet:false,species:'Sandacz, Szczupak',method:'Wobler głęboki 8–14 cm, jig 15–25 g'},
+      {id:'n10',x:275,y:330,depth:6.0,sub:'piasek',veg:'rdestnica',name:'Ługwałd – Wejście',inlet:false,species:'Leszcz, Karp',method:'Grunto, pellet, maggot'}
     ]},
-  sarag:{name:'Jez. Sarąg',desc:'Jezioro k. Szczytna, 590 ha, głęb. max 34.5 m. Czysta woda, słynne z dużych szczupaków i okoni.',lat:53.6200,lon:21.0500,
+  sarag:{name:'Jez. Sarąg',desc:'Jezioro rynnowe k. Szczytna, 590 ha, głęb. max 34.5 m. Jedno z najczystszych jezior Mazur – przejrzystość wody 3–5 m. Słynne z rekordowych szczupaków i sandaczy.',
+    area:590,maxDepth:34.5,avgDepth:11.8,length:10.2,width:1.1,type:'Rynnowe polodowcowe',visibility:'Bardzo dobra (3–5 m)',
+    lat:53.6200,lon:21.0500,
     path:'M52,250 Q88,205 155,193 Q218,190 268,208 Q298,182 340,130 Q398,82 460,56 Q530,45 595,56 Q646,108 670,178 Q680,258 660,342 Q606,394 518,434 Q426,450 332,450 Q285,434 262,410 Q236,368 218,320 Q148,306 95,300 Q60,278 52,250Z M238,244 Q258,228 278,242 Q288,260 272,274 Q252,284 236,270 Q228,256 238,244Z',
+    fish:[
+      {name:'Szczupak',icon:'🎯',size:'do 120 cm / 18 kg',season:'III–IV, X–XI',method:'Wobler, jig, żywa ryba – podwodne struktury',rating:5},
+      {name:'Sandacz',icon:'⭐',size:'do 85 cm / 8 kg',season:'IV–V, IX–X',method:'Jig 10–30 g, główki jigowe, wieczorne żerowanie',rating:4},
+      {name:'Okoń',icon:'🟢',size:'do 50 cm / 1.5 kg',season:'cały rok',method:'Mały jig, spinner, dropshot 0–6 m',rating:4},
+      {name:'Węgorz',icon:'🌙',size:'do 90 cm / 2.5 kg',season:'V–IX (nocne)',method:'Dżdżownica, grunto przy dnie, po zmroku',rating:4},
+      {name:'Lin',icon:'🟠',size:'do 55 cm / 3 kg',season:'VI–VIII',method:'Grunto w roślinności, dżdżownica, kukurydza',rating:3},
+      {name:'Leszcz',icon:'🟡',size:'do 65 cm / 4 kg',season:'V–VIII',method:'Grunto, maggot, chleb – zatoki muliste',rating:3},
+      {name:'Płoć',icon:'⚪',size:'do 35 cm / 0.8 kg',season:'cały rok',method:'Spławik, grunto, maggot, robak',rating:3}
+    ],
+    seasons:{
+      spring:'Marzec–maj: najlepszy czas na szczupaka tuż po spuście lodów. Sandacz aktywny po tarle (kwiecień). Przezroczysta woda – stosuj naturalne kolory woblerów, łów w strefie 0–4 m.',
+      summer:'Czerwiec–sierpień: węgorz nocą przy dnie. Lin i leszcz w płytkich zatokach. Szczupak schodzi do głębszych partii (5–10 m) po nagrzaniu wody powyżej 20°C.',
+      autumn:'Wrzesień–październik: powrót szczupaka i sandacza na płytkie strefy. Najlepszy miesiąc to październik. Duże okonie na jig przy ściankach wyspy.',
+      winter:'Listopad–luty: podlodowe łowienie okonia, płoci i leszczy. Dobry dostęp do lodu od strony Sarąg Wieś i Lipowo. Mormyszka z paskiem lub naturalna przynęta.'
+    },
+    permit:{
+      authority:'PZW Okręg Szczytno',
+      kolo:'Koło PZW Szczytno',
+      price:'~120–180 zł/rok (karta wędkarska + zezwolenie sezonowe)',
+      contact:'Sklep wędkarski Szczytno, ul. Polska 3',
+      rules:[
+        {icon:'🚤',text:'Zakaz używania łodzi z silnikami spalinowymi na terenie całego jeziora'},
+        {icon:'🐟',text:'Min. wymiar szczupaka: 50 cm; sandacza: 45 cm; okonia: 18 cm'},
+        {icon:'📅',text:'Ochrona szczupaka: 1.01–30.04 (łów silnie ograniczony)'},
+        {icon:'🪝',text:'Dozwolone metody: spinning, gruntowe, spławikowe, podlodowe'},
+        {icon:'📍',text:'Punkty dostępu: Sarąg Wieś, Lipowo, Dłużec (parkingi przy brzegu)'}
+      ]
+    },
+    tips:[
+      {icon:'🎯',title:'Szczupak w przezroczystej wodzie',text:'Przy widoczności 3–5 m stosuj naturalne kolory woblerów (oliwkowy, biały brzuch). Najlepsze łowisko: podwodne półki skalne na głęb. 3–6 m przy wschodnim brzegu.'},
+      {icon:'⏰',title:'Okno żerowania sandacza',text:'Sandacz żeruje intensywnie o świcie (5:00–8:00) i zmierzchu (19:00–22:00). Jig 15–25 g na dno rynny (8–18 m) – technika skoków po dnie z pauzami 2–3 s.'},
+      {icon:'🌊',title:'Rynna centralna – kluczowa strefa',text:'Główna oś jeziora to polodowcowa rynna do 34 m głębokości. Przy letnim nagrzaniu wody tu schodzą szczupak i sandacz – trolling lub jig głęboki.'},
+      {icon:'🌙',title:'Nocny węgorz',text:'Maj–sierpień po zmroku: postaw 2–3 grunta z dżdżownicą przy podmytych brzegach. Węgorz wychodzi na żer po godz. 21:00, najaktywniejszy w ciepłe, bezwietrzne noce.'},
+      {icon:'🏔',title:'Okolice wyspy – hotspot okoni',text:'Podwodne ścianki wyspy koncentrują okonie przez cały rok. Dropshot 2–8 m od pionowej ściany daje najlepsze wyniki wiosną (IV–V) i wczesną jesienią (IX).'}
+    ],
     nodes:[
-      {id:'n1',x:108,y:245,depth:4.0,sub:'piasek',veg:'trzcina',name:'Zatoka Sarąg Wieś',inlet:true},
-      {id:'n2',x:218,y:248,depth:9.0,sub:'żwir',veg:'brak',name:'Krawędź Północna',inlet:false},
-      {id:'n3',x:295,y:295,depth:25.0,sub:'muł',veg:'brak',name:'Głębia Wschodnia',inlet:false},
-      {id:'n4',x:438,y:88,depth:34.0,sub:'muł',veg:'brak',name:'Głębia Maksymalna',inlet:false},
-      {id:'n5',x:625,y:195,depth:5.5,sub:'kamienie',veg:'brak',name:'Stok Południowy',inlet:false},
-      {id:'n6',x:570,y:375,depth:7.0,sub:'piasek',veg:'nenufary',name:'Płycizna Zachodnia',inlet:false},
-      {id:'n7',x:510,y:248,depth:18.0,sub:'muł',veg:'brak',name:'Centrum / Rynna',inlet:false},
-      {id:'n8',x:148,y:248,depth:3.0,sub:'piasek',veg:'trzcina',name:'Ujście Potoku',inlet:true}
+      {id:'n1',x:108,y:245,depth:4.0,sub:'piasek',veg:'trzcina',name:'Zatoka Sarąg Wieś',inlet:true,species:'Leszcz, Lin',method:'Grunto, spławik, maggot'},
+      {id:'n2',x:218,y:248,depth:9.0,sub:'żwir',veg:'brak',name:'Krawędź Wyspy – Półka',inlet:false,species:'Okoń, Szczupak',method:'Jig, dropshot przy ścianie 0–10 m'},
+      {id:'n3',x:295,y:295,depth:25.0,sub:'muł',veg:'brak',name:'Głębia Południowej Rynny',inlet:false,species:'Sandacz, Węgorz',method:'Jig głęboki 20–30 g, grunto nocne'},
+      {id:'n4',x:438,y:88,depth:34.0,sub:'muł',veg:'brak',name:'Głębia Maksymalna (Północ)',inlet:false,species:'Sandacz',method:'Jig 25–35 g, bardzo wolno po dnie'},
+      {id:'n5',x:625,y:195,depth:5.5,sub:'kamienie',veg:'brak',name:'Stok Wschodni – Kamienica',inlet:false,species:'Szczupak, Okoń',method:'Wobler, spinner wzdłuż krawędzi skał'},
+      {id:'n6',x:570,y:375,depth:7.0,sub:'piasek',veg:'nenufary',name:'Wschodnia Zatoka Płytka',inlet:false,species:'Szczupak, Lin',method:'Wobler / grunto w roślinności nenufar'},
+      {id:'n7',x:510,y:248,depth:18.0,sub:'muł',veg:'brak',name:'Centrum – Oś Rynny',inlet:false,species:'Sandacz, Szczupak',method:'Jig 15–25 g, trolling wobb. 8–12 cm'},
+      {id:'n8',x:148,y:248,depth:3.0,sub:'piasek',veg:'trzcina',name:'Ujście Potoku Lipowo',inlet:true,species:'Płoć, Okoń',method:'Spławik, grunto, lekki jig 3–8 g'},
+      {id:'n9',x:370,y:130,depth:12.0,sub:'żwir',veg:'brak',name:'Północna Półka Podwodna',inlet:false,species:'Szczupak, Sandacz',method:'Wobler 8–12 cm, jig głęboki 15–25 g'},
+      {id:'n10',x:245,y:182,depth:6.5,sub:'kamienie',veg:'brak',name:'Skalna Ściana Wyspy',inlet:false,species:'Okoń',method:'Dropshot 3–8 m, mały jig 5–10 g'}
     ]}
 };
 
@@ -678,7 +799,15 @@ function calcMoonPhase(dateStr) {
 // ── SCORING ENGINE ─────────────────────────────────────
 function scoreNode(n, sp, c) {
   let s=50; const f=[];
-  const dp={szczupak:{i:[2,4],o:[1,6]},sandacz:{i:[4,8],o:[2,12]},okun:{i:[2,5],o:[1,8]},karp:{i:[1.5,3.5],o:[1,6]},leszcz:{i:[3,6],o:[1.5,10]}};
+  const maxD=Math.max(...curLake.nodes.map(n=>n.depth));
+  const deep=maxD>15;
+  const dp={
+    szczupak:{i:[1,5],o:[0.5,10]},
+    sandacz:{i:deep?[8,20]:[4,10],o:deep?[3,30]:[2,15]},
+    okun:{i:[2,7],o:[0.5,12]},
+    karp:{i:[1.5,4],o:[0.5,7]},
+    leszcz:{i:[3,8],o:[1.5,15]}
+  };
   const d=dp[sp];
   if(n.depth>=d.i[0]&&n.depth<=d.i[1]){s+=15;f.push('Idealna głębokość');}
   else if(n.depth>=d.o[0]&&n.depth<=d.o[1]){s+=5;}
@@ -709,6 +838,12 @@ function scoreNode(n, sp, c) {
   if(c.isSu&&['karp','leszcz'].includes(sp)){s+=6;}
   const ma=Math.abs(c.moonPhase-.5);
   if(ma<0.1||c.moonPhase<0.08){s+=6;f.push('Pełnia/nów — wzmożony żer');}
+  // Bonus za pole species na węźle (jeziora z kartą)
+  if(n.species){
+    const spPl={szczupak:'Szczupak',sandacz:'Sandacz',okun:'Okoń',karp:'Karp',leszcz:'Leszcz'};
+    const spName=spPl[sp]||sp;
+    if(n.species.includes(spName)){s+=14;f.push('Polecane stanowisko dla '+spName);}
+  }
   return{score:Math.max(0,Math.min(100,Math.round(s))),factors:f.slice(0,3)};
 }
 
@@ -757,7 +892,7 @@ async function updateAll() {
 
   setLiveStatus(apiSource==='live'?'live':'sim');
   renderMap(); renderCond(); renderAlerts(sp); renderTime(sp); renderMoon(); renderSpots(); renderCatchLog();
-  updateMapH();
+  updateMapH(); updateChips();
 }
 
 function setLiveStatus(s) {
@@ -783,6 +918,58 @@ function renderMap() {
   document.getElementById('lakeDepth').setAttribute('d',l.path);
   document.getElementById('mapName').textContent=l.name;
   document.getElementById('mapDesc').textContent=l.desc;
+
+  // Lake card
+  const card=document.getElementById('lakeCard');
+  if(l.fish){
+    card.style.display='block';
+    document.getElementById('lkCardTitle').textContent='📋 Karta jeziora – '+l.name;
+    // Stats
+    const stat=(label,val,small)=>'<div class="lk-stat"><div class="lk-stat-l">'+label+'</div><div class="lk-stat-v"'+(small?' style="font-size:12px"':'')+'>'+val+'</div></div>';
+    document.getElementById('lkStats').innerHTML=
+      stat('Powierzchnia',l.area+' ha')+
+      stat('Głęb. max',l.maxDepth+' m')+
+      stat('Głęb. średnia',l.avgDepth+' m')+
+      stat('Długość / szer.',l.length+' km / '+l.width+' km')+
+      stat('Typ jeziora',l.type,true)+
+      stat('Widoczność wody',l.visibility,true);
+    // Fish
+    const fishIco={5:'🔴',4:'🟠',3:'🟡',2:'🟢',1:'⚪'};
+    document.getElementById('lkFish').innerHTML=l.fish.map(f=>
+      '<div class="lk-fish-row">'+
+      '<div class="lk-fish-ico" style="font-size:26px">🐟</div>'+
+      '<div class="lk-fish-inf">'+
+        '<div class="lk-fish-nm">'+f.name+' <span style="font-size:11px;color:var(--gd);font-weight:400">'+'★'.repeat(f.rating)+'☆'.repeat(5-f.rating)+'</span></div>'+
+        '<div class="lk-fish-det"><b style="color:var(--tx)">Max:</b> '+f.size+' &nbsp;<b style="color:var(--tx)">Sezon:</b> '+f.season+'<br><b style="color:var(--tx)">Metoda:</b> '+f.method+'</div>'+
+      '</div>'+
+      '</div>'
+    ).join('');
+    // Seasons
+    const s=l.seasons;
+    document.getElementById('lkSeasons').innerHTML=
+      [['🌱 Wiosna',s.spring,'#2ec4b6'],['☀️ Lato',s.summer,'#f4a261'],['🍂 Jesień',s.autumn,'#cd6d0a'],['❄️ Zima',s.winter,'#0ea5e9']]
+      .map(([nm,tx,col])=>'<div class="lk-season" style="border-left:3px solid '+col+'"><div class="lk-season-nm" style="color:'+col+'">'+nm+'</div><div class="lk-season-tx">'+tx+'</div></div>')
+      .join('');
+    // Permit
+    const p=l.permit;
+    document.getElementById('lkPermit').innerHTML=
+      '<div class="lk-permit-box">'+
+      '<div class="lk-permit-row"><span class="lk-permit-lbl">Zarządca</span><span class="lk-permit-val">'+p.authority+'</span></div>'+
+      '<div class="lk-permit-row"><span class="lk-permit-lbl">Koło</span><span class="lk-permit-val">'+p.kolo+'</span></div>'+
+      '<div class="lk-permit-row"><span class="lk-permit-lbl">Cena</span><span class="lk-permit-val">'+p.price+'</span></div>'+
+      '<div class="lk-permit-row"><span class="lk-permit-lbl">Kontakt</span><span class="lk-permit-val">'+p.contact+'</span></div>'+
+      '</div>';
+    document.getElementById('lkRules').innerHTML=p.rules.map(r=>
+      '<div class="lk-rule"><div class="lk-rule-ico">'+r.icon+'</div><div>'+r.text+'</div></div>'
+    ).join('');
+    // Tips
+    document.getElementById('lkTips').innerHTML=l.tips.map(t=>
+      '<div class="lk-tip-row"><div class="lk-tip-ico">'+t.icon+'</div>'+
+      '<div class="lk-tip-tx"><b>'+t.title+'</b>'+t.text+'</div></div>'
+    ).join('');
+  } else {
+    card.style.display='none';
+  }
 
   // Land features (Google Maps style green patches)
   const landG=document.getElementById('landG'); landG.innerHTML='';
@@ -971,20 +1158,28 @@ function renderMoon() {
 // ── SPOTS ──────────────────────────────────────────────
 function renderSpots() {
   const ranks=['🥇','🥈','🥉','4️⃣','5️⃣'];
-  document.getElementById('topSpots').innerHTML=scoredNodes.slice(0,5).map((n,i)=>'<div class="sc r'+(i+1)+'" onclick="goToSpot(this,'+n.x+','+n.y+',\''+n.name+'\','+n.score+',\''+n.sub+'\',\''+((n.factors||[]).join('|'))+'\')">'
-    +'<div class="sh"><span class="srk">'+ranks[i]+'</span><span class="sn">'+n.name+'</span><span class="ss">'+n.score+'</span></div>'
-    +'<div class="sd">'+n.depth+'m głęb. · dno: '+n.sub+(n.veg!=='brak'?' · '+n.veg:'')+(n.inlet?' 💧 dopływ':'')+'.<br>'+(n.factors||[]).join('. ')+'.</div>'
-    +'<div class="stg">'+(n.factors||[]).map(f=>'<span class="tg">'+f+'</span>').join('')+'</div>'
-    +'</div>').join('');
+  document.getElementById('topSpots').innerHTML=scoredNodes.slice(0,5).map((n,i)=>{
+    const idx=scoredNodes.indexOf(n);
+    return '<div class="sc r'+(i+1)+'" onclick="goToSpot('+idx+')">'
+      +'<div class="sh"><span class="srk">'+ranks[i]+'</span><span class="sn">'+n.name+'</span><span class="ss">'+n.score+'</span></div>'
+      +'<div class="sd">'+n.depth+'m głęb. · dno: '+n.sub+(n.veg&&n.veg!=='brak'?' · '+n.veg:'')+(n.inlet?' 💧 dopływ':'')
+      +(n.species?'<br>🐟 '+n.species:'')
+      +(n.method?'<br>🎣 '+n.method:'')+'</div>'
+      +'<div class="stg">'+(n.factors||[]).map(f=>'<span class="tg">'+f+'</span>').join('')+'</div>'
+      +'</div>';
+  }).join('');
 }
 
-function goToSpot(el,x,y,name,score,sub,fStr) {
+function goToSpot(idx) {
+  const n=scoredNodes[idx];
+  if(!n)return;
   showTab('map',document.getElementById('tbtn-map'));
   setTimeout(()=>{
     const ring=document.getElementById('hlRing');
-    ring.setAttribute('cx',x);ring.setAttribute('cy',y);ring.setAttribute('opacity','1');
-    document.getElementById('mapDesc').textContent='📍 '+name+' · Wynik: '+score+'/100. '+fStr.split('|').join('; ')+'.';
-  },80);
+    ring.setAttribute('cx',n.x);ring.setAttribute('cy',n.y);ring.setAttribute('opacity','1');
+    setTimeout(()=>ring.setAttribute('opacity','0'),2000);
+    openNodeSheet(n);
+  },120);
 }
 
 // ── CATCH LOG ──────────────────────────────────────────
@@ -1041,6 +1236,12 @@ if('serviceWorker' in navigator) {
   await updateAll();
   document.getElementById('splashStatus').textContent='Gotowe!';
   await new Promise(r=>setTimeout(r,300));
+  document.getElementById('splash').classList.add('hide');
+  setTimeout(()=>{document.getElementById('splash').style.display='none';},600);
+})();
+</script>
+</body>
+</html>
   document.getElementById('splash').classList.add('hide');
   setTimeout(()=>{document.getElementById('splash').style.display='none';},600);
 })();
